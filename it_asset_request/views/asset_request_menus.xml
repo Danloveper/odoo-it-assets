@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="it_assets" name="IT Assests" sequence="10">
+        <menuitem
+            id="it_assest_request_menu"
+            name="Assest Request"
+            action="it_asset_request_action"/>
+    </menuitem>
+    
+
+</odoo>
