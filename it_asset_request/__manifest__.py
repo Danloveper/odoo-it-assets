@@ -16,6 +16,7 @@
 
     'category': 'Project',
     'version': '0.1',
+    'license': 'LGPL-3',
     'application': True,
 
     # any module necessary for this one to work correctly
@@ -24,12 +25,13 @@
     # always loaded
     'data': [
         'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
         'views/asset_request_views.xml',
         'views/asset_request_menus.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
-        'demo/demo.xml',
+        # 'demo/demo.xml',
     ],
 }
 
