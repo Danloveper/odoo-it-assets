@@ -1,10 +1,14 @@
 from odoo import _, api, fields, models
+from odoo.exceptions import UserError
 
 class ItAssetRequest(models.Model):
     _name = 'it.asset.request'
     _description = 'IT Asset Request'
     
-    name = fields.Char('name')
+    name = fields.Char(
+        required=True,
+        default='New',
+    )
 
     employee_name = fields.Char(
         required=True
@@ -57,3 +61,45 @@ class ItAssetRequest(models.Model):
     )
 
     estimated_cost = fields.Float('estimated_cost')
+    
+    display_name_info = fields.Char(
+        compute='_compute_display_name_info'
+    )
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        Sequence = self.env['ir.sequence']
+        for vals in vals_list:
+            if vals.get('name', _('New')) == _('New'):
+               vals['name'] = Sequence.next_by_code('it.asset.request')
+
+        return super(ItAssetRequest, self).create(vals)
+    
+    @api.constrains('estimated_cost')
+    def _constrains_estimated_cost(self):
+        for request in self:
+            if request.estimated_cost < 0:
+                raise UserError(_('The estimated cost cannot be negative.'))
+    
+    @api.depends('asset_type', 'employee_name', 'priority')
+    def _compute_display_name_info(self):
+        for request in self:
+            features = [request.asset_type, request.employee_name, request.priority]
+            request.display_name_info = " - ".join(filter(None, features))
+
+    @api.onchange('asset_type')
+    def _onchange_asset_type(self):
+        self.is_urgent = True if self.asset_type in ('laptop', 'license') else False
+
+    def action_send(self):
+        return self.write({'state': 'submitted'})
+    
+    def action_approve(self):
+        return self.write({
+            'state': 'approved',
+            'approved_by_id': self.env.uid,
+            'approval_date': fields.Datetime.now()
+        })
+    
+    def action_reject(self):
+        return self.write({'state': 'rejected'})

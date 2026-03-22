@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record id="it_asset_request_view_tree" model="ir.ui.view">
-        <field name="name">it.asset.request.view.tree</field>
+    <record id="it_asset_request_view_search" model="ir.ui.view">
+        <field name="name">it.asset.request.view.search</field>
+        <field name="model">it.asset.request</field>
+        <field name="arch" type="xml">
+            <search string="Asset Request">
+                <field name="employee_name" />
+                <field name="employee_email" />
+            </search>
+        </field>
+    </record>
+
+    <record id="it_asset_request_view_list" model="ir.ui.view">
+        <field name="name">it.asset.request.view.list</field>
         <field name="model">it.asset.request</field>
         <field name="arch" type="xml">
             <list string="Asset Request">
                 <field name="name" />
+                <field name="request_date" />
+                <field name="employee_name" />
+                <field name="asset_type" />
+                <field name="priority" widget="priority" readonly="1" />
+                <field name="state" widget="badge" decoration-info="state == 'submitted'"
+                    decoration-success="state == 'approved'" decoration-danger="state == 'rejected'" />
             </list>
         </field>
     </record>
@@ -17,40 +34,55 @@
         <field name="arch" type="xml">
             <form string="Asset Request">
                 <header>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved" />
+                    <button string="Send" name="action_send" type="object" class="oe_highlight"
+                        invisible="state != 'draft'" />
+                    <button string="Aproved" name="action_approve" type="object"
+                        class="oe_highlight"
+                        invisible="state != 'submitted'" />
+                    <button string="Reject" name="action_reject" type="object"
+                        invisible="state != 'submitted'" />
+                    <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
+                    <h1 class="mt0">
+                        <field name="name" readonly="1" class="mb16" />
+                    </h1>
+                    <h3>
+                        <field name="display_name_info" />
+                    </h3>
                     <group>
                         <group>
-                            <field name="employee_name" />
-                            <field name="employee_email" widget="email" />
+                            <field name="employee_name" readonly="state != 'draft'" />
+                            <field name="employee_email" widget="email" readonly="state != 'draft'" />
                         </group>
                         <group>
-                            <field name="request_date" />
+                            <field name="request_date" readonly="1" />
+                            <field name="is_urgent" readonly="state != 'draft'" />
                         </group>
                     </group>
                     <group>
                         <group name="asset" string="Asset">
-                            <field name="asset_type" />
-                            <field name="is_urgent" />
-                            <field name="priority" widget="priority" />
+                            <field name="asset_type" readonly="state != 'draft'" />
+                            <field name="priority" widget="priority" readonly="state != 'draft'" />
+                            <field name="estimated_cost" readonly="state != 'draft'" />
                         </group>
-                        <group name="approve" string="Approve">
-                            <field name="approved_by_id" />
-                            <field name="approval_date" />
+                        <group name="approval" string="Approval">
+                            <field name="approved_by_id" readonly="1" />
+                            <field name="approval_date" readonly="1" />
                         </group>
                     </group>
                     <group>
-                        <field name="justification" />
+                        <field name="justification" readonly="state != 'draft'" />
                     </group>
                 </sheet>
             </form>
         </field>
     </record>
-    
+
     <record id="it_asset_request_action" model="ir.actions.act_window">
-        <field name="name">Action Asset request</field>
+        <field name="name">Asset Request</field>
         <field name="res_model">it.asset.request</field>
         <field name="view_mode">list,form,search</field>
     </record>
+    
 </odoo>
