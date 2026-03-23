@@ -4,10 +4,17 @@ from odoo.exceptions import UserError
 class ItAssetRequest(models.Model):
     _name = 'it.asset.request'
     _description = 'IT Asset Request'
-    
+
+    company_id = fields.Many2one(
+        comodel_name='res.company',
+        required=True, 
+        default=lambda self: self.env.company
+    )
+
     name = fields.Char(
         required=True,
         default='New',
+        copy=False,
     )
 
     employee_name = fields.Char(
@@ -17,7 +24,8 @@ class ItAssetRequest(models.Model):
     employee_email = fields.Char()
 
     request_date = fields.Date(
-        default=lambda self: fields.Date.today()
+        default=lambda self: fields.Date.today(),
+        copy=False,
     )
 
     asset_type = fields.Selection(
@@ -49,18 +57,24 @@ class ItAssetRequest(models.Model):
             ('approved', 'Approved'),
             ('rejected', 'Rejected'),
         ],
-        default='draft'   
+        default='draft',
+        copy=False,
     )
 
-    approved_by_id = fields.Many2one('res.users')
+    approved_by_id = fields.Many2one(
+        comodel_name='res.users',
+        copy=False,
+    )
 
-    approval_date = fields.Datetime()
+    approval_date = fields.Datetime(
+        copy=False,
+    )
 
     is_urgent = fields.Boolean(
         string='Is Urgent?'
     )
 
-    estimated_cost = fields.Float('estimated_cost')
+    estimated_cost = fields.Float()
     
     display_name_info = fields.Char(
         compute='_compute_display_name_info'

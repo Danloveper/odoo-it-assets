@@ -8,6 +8,30 @@
             <search string="Asset Request">
                 <field name="employee_name" />
                 <field name="employee_email" />
+                <field name="name" string="Reference or Employee"
+                    filter_domain="['|', ('name', 'ilike', self), ('employee_name', 'ilike', self)]" />
+                <field name="approved_by_id" />
+                <filter string="To Approve" name="to_approve" domain="[('state', '=', 'submitted')]" />
+                <filter string="Approved" name="approved" domain="[('state', '=', 'approved')]" />
+                <separator />
+                <filter string="Urgent" name="urgent" domain="[('is_urgent', '=', True)]" />
+                <filter string="High Priority" name="high_priority"
+                    domain="[('priority', '=', 'high')]" />
+                <separator />
+                <filter string="Requested Today" name="today"
+                    domain="[('request_date', '=', context_today().strftime('%Y-%m-%d'))]" />
+                <filter string="My Requests" name="my_requests" domain="[('create_uid', '=', uid)]" />
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}" />
+                    <filter string="Asset Type" name="group_asset_type"
+                        context="{'group_by': 'asset_type'}" />
+                    <filter string="Employee" name="group_employee"
+                        context="{'group_by': 'employee_name'}" />
+                    <filter string="Request Date" name="group_date"
+                        context="{'group_by': 'request_date:month'}" />
+                    <filter string="Priority" name="group_priority"
+                        context="{'group_by': 'priority'}" />
+                </group>
             </search>
         </field>
     </record>
@@ -37,10 +61,11 @@
                     <button string="Send" name="action_send" type="object" class="oe_highlight"
                         invisible="state != 'draft'" />
                     <button string="Aproved" name="action_approve" type="object"
-                        class="oe_highlight"
+                        class="oe_highlight" groups="it_asset_request.group_asset_request_manager"
                         invisible="state != 'submitted'" />
                     <button string="Reject" name="action_reject" type="object"
-                        invisible="state != 'submitted'" />
+                        invisible="state != 'submitted'"
+                        groups="it_asset_request.group_asset_request_manager" />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet>
@@ -84,5 +109,5 @@
         <field name="res_model">it.asset.request</field>
         <field name="view_mode">list,form,search</field>
     </record>
-    
+
 </odoo>
