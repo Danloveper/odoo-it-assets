@@ -24,10 +24,13 @@
 
     # always loaded
     'data': [
+        'security/asset_request_security.xml',
         'security/ir.model.access.csv',
-        'data/ir_sequence_data.xml',
+        'data/sequence.xml',
         'views/asset_request_views.xml',
         'views/asset_request_menus.xml',
+        'views/website_templates.xml',
+        'report/asset_request_report.xml',
     ],
     # only loaded in demonstration mode
     'demo': [
