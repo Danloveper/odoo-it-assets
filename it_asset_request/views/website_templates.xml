@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="asset_request_template" name="Asset Request Form">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <section class=" pt64 pb64 bg-100">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-7">
+                                <div class="text-center mb-5">
+                                    <div
+                                        class="bg-primary d-inline-block rounded-circle p-3 mb-3 shadow-sm">
+                                        <i class="fa fa-laptop-medical fa-2x text-white" />
+                                    </div>
+                                    <h2 class="fw-bold">IT Asset Request</h2>
+                                    <p class="text-muted">Complete the details below to process your
+                                        equipment request.</p>
+                                </div>
+
+                                <div class="card border-0 shadow-lg">
+                                    <div class="card-body p-4 p-md-5">
+                                        <form action="/asset-request/submit" method="post"
+                                            enctype="multipart/form-data"
+                                            class="s_website_form_container">
+                                            <input type="hidden" name="csrf_token"
+                                                t-att-value="request.csrf_token()" />
+
+                                            <div class="row">
+                                                <div class="col-12 mb-4">
+                                                    <h5 class="text-primary border-bottom pb-2 mb-3">
+                                                        <i class="fa fa-user-circle me-2" />Employee
+                                                        Information </h5>
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-bold" for="name">
+                                                        Fullname <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span
+                                                            class="input-group-text bg-white border-end-0">
+                                                            <i class="fa fa-user text-muted" />
+                                                        </span>
+                                                        <input
+                                                            class="form-control border-start-0 ps-0"
+                                                            type="text" name="name" required="1"
+                                                            id="name" placeholder="Ej: John Doe" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-bold" for="email">Corporate
+                                                        Email <span class="text-danger">*</span></label>
+                                                    <div class="input-group">
+                                                        <span
+                                                            class="input-group-text bg-white border-end-0">
+                                                            <i class="fa fa-envelope text-muted" />
+                                                        </span>
+                                                        <input
+                                                            class="form-control border-start-0 ps-0"
+                                                            type="email" name="email" required="1"
+                                                            id="email"
+                                                            placeholder="user@company.com" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-12 mb-4 mt-3">
+                                                    <h5 class="text-primary border-bottom pb-2 mb-3">
+                                                        <i class="fa fa-desktop me-2" />Retails of
+                                                        Requirement </h5>
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-bold"
+                                                        for="asset_type">Asset Type <span
+                                                            class="text-danger">*</span></label>
+                                                    <select class="form-select bg-light"
+                                                        name="asset_type" required="1"
+                                                        id="asset_type">
+                                                        <option value="" disabled="disabled"
+                                                            selected="selected">Selected of type...</option>
+                                                        <t t-foreach="asset_types" t-as="type">
+                                                            <option t-att-value="type[0]"
+                                                                t-esc="type[1]" />
+                                                        </t>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label fw-bold" for="priority">
+                                                        Priority <span class="text-danger">*</span></label>
+                                                    <select class="form-select bg-light"
+                                                        name="priority" required="1" id="priority">
+                                                        <t t-foreach="priorities" t-as="p">
+                                                            <option t-att-value="p[0]" t-esc="p[1]" />
+                                                        </t>
+                                                    </select>
+                                                </div>
+
+                                                <div class="col-12 mb-3">
+                                                    <label class="form-label fw-bold" for="cost">Estimated
+                                                        Cost</label>
+                                                    <div class="input-group">
+                                                        <span
+                                                            class="input-group-text bg-white border-end-0">
+                                                            <i class="fa fa-tag text-muted" />
+                                                        </span>
+                                                        <span
+                                                            class="input-group-text bg-white border-start-0 border-end-0">
+                                                            $</span>
+                                                        <input
+                                                            class="form-control border-start-0 ps-0"
+                                                            type="number" step="0.01" min="0"
+                                                            name="cost" id="cost" placeholder="0.00" />
+                                                    </div>
+                                                    <div class="form-text">Optional: Please provide
+                                                        an approximate value if you know it.</div>
+                                                </div>
+
+                                                <div class="col-12 mb-4">
+                                                    <label class="form-label fw-bold"
+                                                        for="justification">Justification of Request <span
+                                                            class="text-danger">*</span></label>
+                                                    <textarea class="form-control bg-light"
+                                                        name="justification" required="1"
+                                                        id="justification" rows="4"
+                                                        placeholder="Why do you need this equipment?"></textarea>
+                                                </div>
+
+                                                <div class="col-12 text-center mt-2">
+                                                    <button type="submit"
+                                                        class="btn btn-primary btn-lg px-5 shadow-sm">
+                                                        <i class="fa fa-paper-plane me-2" /> Send
+                                                        Request </button>
+                                                    <p class="mt-3 text-muted small">Upon
+                                                        submission, the IT department will be
+                                                        notified for review.</p>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <template id="asset_request_details_card" name="Asset Request Card">
+        <div class="card shadow-sm border-0">
+            <div
+                class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+                <h4 class="mb-0">
+                    <i class="fa fa-clipboard-list me-2" /> Asset Request #<t t-esc="asset.id" />
+                </h4>
+                <t t-set="state_colors"
+                    t-value="{
+                    'draft': 'secondary',
+                    'submitted': 'info',
+                    'approved': 'success',
+                    'rejected': 'danger',
+                }"
+                />
+                <span t-attf-class="badge rounded-pill bg-#{state_colors.get(asset.state, 'light')}">
+                    <t t-esc="asset.state.upper()" />
+                </span>
+            </div>
+            <div class="card-body p-4">
+                <div class="row mb-4">
+                    <div class="col-6">
+                        <small class="text-muted text-uppercase fw-bold">Employee</small>
+                        <p class="fs-5 mb-0">
+                            <i class="fa fa-user me-2 text-primary" />
+                            <t t-esc="asset.employee_name" />
+                        </p>
+                        <p class="text-muted">
+                            <i class="fa fa-envelope me-2" />
+                            <t t-esc="asset.employee_email" />
+                        </p>
+                    </div>
+                    <div class="col-6 text-end">
+                        <small class="text-muted text-uppercase fw-bold">Priority</small>
+                        <t t-set="p_style"
+                            t-value="{
+                            'high': 'danger',
+                            'medium': 'warning',
+                            'low': 'success',
+                            'no_priority': 'secondary',
+                        }.get(asset.priority, 'muted')" />
+
+                        <div>
+                            <span t-attf-class="fw-bold text-#{p_style}">
+                                <i t-attf-class="fa fa-exclamation-triangle me-1" />
+                                <span t-field="asset.priority" />
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="opacity-10" />
+
+                <div class="row mt-4">
+                    <div class="col-4 mb-3">
+                        <div class="p-3 bg-light rounded text-center">
+                            <i class="fa fa-laptop fs-3 text-primary mb-2" />
+                            <div class="small text-muted">Asset Type</div>
+                            <div class="fw-bold">
+                                <t t-esc="asset.asset_type" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <div class="p-3 bg-light rounded text-center">
+                            <i class="fa fa-money fs-3 text-success mb-2" />
+                            <div class="small text-muted">Estimated Cost</div>
+                            <div class="fw-bold">
+                                <t t-esc="asset.estimated_cost"
+                                    t-options='{"widget": "monetary", "display_currency": asset.company_id.currency_id}' />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 mb-3">
+                        <div class="p-3 bg-light rounded text-center">
+                            <i class="fa fa-calendar fs-3 text-info mb-2" />
+                            <div class="small text-muted">Request Date</div>
+                            <div class="fw-bold">
+                                <t t-esc="asset.request_date"
+                                    t-options='{"widget": "date"}' />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <t t-if="asset.state == 'approved'">
+                    <div
+                        t-attf-class="mt-4 p-3 rounded border-start border-4 border-success bg-success-light">
+                        <h5 class="mb-3">
+                            <i t-attf-class="fa fa-check-circle text-success me-2" /> Approval
+                            Details </h5>
+                        <div class="row">
+                            <div class="col-6">
+                                <small class="text-muted text-uppercase fw-bold d-block">Responsible</small>
+                                <span class="fw-bold">
+                                    <i class="fa fa-user-circle me-1 text-dark" />
+                                    <t t-esc="asset.approved_by_id.name" />
+                                </span>
+                            </div>
+                            <div class="col-6 text-end">
+                                <small class="text-muted text-uppercase fw-bold d-block">Date</small>
+                                <span class="text-dark">
+                                    <i class="fa fa-clock-o me-1" />
+                                    <span t-field="asset.approval_date"
+                                        t-options='{"widget": "datetime"}' />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="mt-4">
+                    <h5 class="border-bottom pb-2">Justification</h5>
+                    <p class="text-secondary mt-2" style="white-space: pre-line;">
+                        <t t-esc="asset.justification or 'No description provided.'" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="asset_request_page" name="Asset Request Details">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_text_block pt40 pb40" data-snippet="s_text_block">
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <t t-call="it_asset_request.asset_request_details_card" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+</odoo>
